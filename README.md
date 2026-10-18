@@ -1,8 +1,6 @@
-# [Nome do grupo] <!-- TODO: PREENCHER O NOME DO GRUPO -->
+# Grupo 7
 
-> **⚠️ TODO — PREENCHER ANTES DA ENTREGA:** nome do grupo (título acima) e integrantes (linha abaixo).
-
-**Integrantes:** [nomes] <!-- TODO: PREENCHER OS INTEGRANTES -->
+**Integrantes:** Gabriel de Castilho Valdo e Rodrigo Rampani Costa
 
 Motor antifraude Pix — **política 6.0.0**. Uma API que recebe um Pix, aplica
 as regras da política e devolve `approved`, `two_factor_required` ou
@@ -204,13 +202,18 @@ do servidor; por isso o exemplo usa o horário atual.)
 
 Testes (com a API de pé, em outro terminal):
 
+
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate        # Windows: .venv/Scripts/activate
 pip install -r requirements-dev.txt
 pytest
 python3 -m flake8 src tests
 ```
+
+> No Windows, se os testes não conectarem em `0.0.0.0`, rode com
+> `SERVER_LOCALHOST=127.0.0.1`.
+> python3 = python
 
 São 80 testes de caixa-preta por HTTP em `tests/integration/`, cobrindo os
 cenários da matriz da política (casos 1–30, 16c, 18a–i, 19, 20', 20'', 21,
@@ -229,8 +232,6 @@ naquela requisição — cada Pix do histórico entra por `POST`, como em
 produção, só que "recebido" na data do cenário. Com `APP_ENV=production` o
 cabeçalho é ignorado. O teste de concorrência usa o relógio real.
 
-> No Windows, se os testes não conectarem em `0.0.0.0`, rode com
-> `SERVER_LOCALHOST=127.0.0.1`.
 
 ### Rotas
 
