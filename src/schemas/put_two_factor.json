@@ -1,0 +1,12 @@
+{
+  "title": "PutTwoFactor",
+  "type": "object",
+  "properties": {
+    "result": {
+      "type": "string",
+      "enum": ["confirmed", "declined", "cancelled"]
+    }
+  },
+  "required": ["result"],
+  "additionalProperties": false
+}

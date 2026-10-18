@@ -1,0 +1,82 @@
+# O docker compose sobe a aplicacao e o banco juntos, com um comando so:
+#
+#     docker compose up
+#
+# Os testes rodam na sua maquina, contra a API que subiu aqui:
+#
+#     pip install -r requirements-dev.txt
+#     pytest
+#
+# Nao precisa criar arquivo nenhum antes: cada configuracao abaixo tem um
+# valor padrao, escrito no proprio ${VARIAVEL:-padrao}. Le-se assim:
+# "use o que estiver na variavel VARIAVEL; se ela nao existir, use padrao".
+#
+# O .env continua valendo, e agora e OPCIONAL: se voce criar um (copiando
+# o .env.example), o compose le esse arquivo e o que estiver la ganha do
+# padrao. E o jeito de trocar uma porta ocupada ou o token, sem editar
+# este arquivo.
+
+services:
+  api:
+    build:
+      context: .
+      target: api
+    ports:
+      # Se a porta 3000 ja estiver ocupada na sua maquina, coloque
+      # API_PORT=3001 (ou outra livre) no seu .env.
+      - "${API_PORT:-3000}:3000"
+    environment:
+      # Dentro do compose, o banco atende pelo nome "db" — nao por localhost.
+      # Por isso esta linha nao tem padrao pra sobrescrever: aqui dentro o
+      # endereco do banco e sempre este.
+      DATABASE_URL: postgresql+psycopg2://bootcamp:bootcamp@db:5432/bootcamp
+      # "local" ou "test" ligam o relogio de teste (cabecalho X-Test-Clock),
+      # que a suite usa para montar historicos de meses pela API.
+      # Em "production" o cabecalho e ignorado.
+      APP_ENV: ${APP_ENV:-local}
+      SERVICE_NAME: ${SERVICE_NAME:-antifraude-pix-api}
+      # A senha que protege os endpoints internos. O padrao vale pra
+      # estudar; num sistema de verdade, isso nunca teria valor padrao.
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-default_token}
+      # A rota de confirmacao de 2FA (E1) da politica. Variavel que nao
+      # esta nesta lista NAO CHEGA no container.
+      TWO_FACTOR_ROUTE_ENABLED: ${TWO_FACTOR_ROUTE_ENABLED:-true}
+      # Quanto uma analise espera pela trava do id ou do pagador antes de
+      # responder 503 QIT001006.
+      LOCK_TIMEOUT: ${LOCK_TIMEOUT:-2s}
+    volumes:
+      # Monta o codigo pra dentro do container: salvou o arquivo,
+      # a API recarrega sozinha (o --reload ali embaixo).
+      - ./src:/app
+    # --reload: salvou o arquivo, a API reinicia sozinha.
+    command: uvicorn app:app --host 0.0.0.0 --port 3000 --no-server-header --reload
+    healthcheck:
+      # "Subiu" nao e a mesma coisa que "ja responde". E esta checagem
+      # que diz quando a API passa a atender de verdade — espere ela
+      # ficar (healthy) antes de rodar o pytest, ou o primeiro teste
+      # bate numa porta que ainda nao responde.
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:3000/health_check\")'"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    build: ./database/.
+    environment:
+      POSTGRES_USER: bootcamp
+      POSTGRES_PASSWORD: bootcamp
+      POSTGRES_DB: bootcamp
+    ports:
+      # Mesma ideia: DB_PORT=5433 no .env se a 5432 estiver ocupada.
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      # A API so sobe depois que o banco responder de verdade.
+      test: ["CMD-SHELL", "pg_isready -U bootcamp -d bootcamp"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+

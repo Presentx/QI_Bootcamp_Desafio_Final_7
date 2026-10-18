@@ -1,0 +1,78 @@
+# ─────────────────────────────────────────────────────────────
+# Bootcamp QI Tech — o que o Git deve ignorar
+#
+# Regra de ouro: NUNCA versione segredo (senha, token, chave) nem
+# dado real. O que é segredo mora em variável de ambiente; o que é
+# exemplo mora no .env.example, com valor de mentirinha.
+# ─────────────────────────────────────────────────────────────
+
+# --- Segredos e configuração local -------------------------
+# O .env guarda as senhas da SUA máquina. Ele nunca sobe.
+# Quem entra no projeto copia o .env.example e preenche.
+.env
+.env.*
+!.env.example
+local.env
+*.pem
+*.key
+*.p12
+*.pfx
+credentials
+.aws/
+
+# --- Dados -------------------------------------------------
+# Planilha e dump costumam carregar dado real de gente de verdade.
+# Se precisar de dado pra testar, gere fake no próprio teste.
+*.csv
+*.xlsx
+*.xls
+*.dump
+*.sql.gz
+*.parquet
+*.sqlite
+*.db
+
+# --- Python ------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Ambiente virtual --------------------------------------
+env/
+venv/
+.venv/
+
+# --- Testes e cobertura ------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.cache
+
+# --- Editor / IDE ------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# --- Ferramentas de IA -------------------------------------
+.claude/
+
+# --- Empacotamento / binários ------------------------------
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.rar
+
+# --- Tipagem estática --------------------------------------
+.mypy_cache/
+.ruff_cache/

@@ -1,0 +1,32 @@
+# O que NAO deve ser enviado para o Docker na hora de montar a imagem.
+#
+# Tudo que esta na pasta do projeto e mandado pro Docker antes do build.
+# Sem este arquivo, a sua .venv (centenas de megabytes) e o historico do
+# Git viajam junto a cada build — e o build fica lento a toa.
+
+.git
+.gitignore
+.github
+
+# Ambiente virtual e caches do Python: a imagem instala tudo do zero.
+.venv
+venv
+env
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# Segredo NUNCA entra na imagem. As variaveis chegam por ambiente,
+# na hora de rodar (olha o "environment" no docker-compose.yml).
+.env
+.env.*
+!.env.example
+
+# Editor
+.vscode
+.idea
+.DS_Store

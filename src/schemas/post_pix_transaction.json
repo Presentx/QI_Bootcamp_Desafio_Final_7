@@ -1,0 +1,131 @@
+{
+  "title": "PostPixTransaction",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^\\s*[A-Za-z0-9_-]{1,64}\\s*$"
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "transaction_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d{1,6})?)?(Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "source_account": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string",
+          "pattern": "^\\d{1,20}$"
+        },
+        "account_number": {
+          "type": "string",
+          "pattern": "^\\d{1,20}$"
+        },
+        "opening_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d{1,6})?)?(Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "owner": {
+          "type": "object",
+          "properties": {
+            "document_number": {
+              "type": "string",
+              "pattern": "^(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}|\\d{14})$"
+            }
+          },
+          "required": ["document_number"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["branch", "account_number", "opening_date", "owner"],
+      "additionalProperties": false
+    },
+    "destination_account": {
+      "type": "object",
+      "properties": {
+        "participant": {
+          "type": "string",
+          "pattern": "^\\d{8}$"
+        },
+        "branch": {
+          "type": "string",
+          "pattern": "^\\d{1,20}$"
+        },
+        "account_number": {
+          "type": "string",
+          "pattern": "^\\d{1,20}$"
+        },
+        "opening_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d{1,6})?)?(Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "owner": {
+          "type": "object",
+          "properties": {
+            "document_number": {
+              "type": "string",
+              "pattern": "^(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}|\\d{14})$"
+            }
+          },
+          "required": ["document_number"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["participant", "branch", "account_number", "opening_date", "owner"],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "device_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "channel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "ip": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 45
+        },
+        "geolocation": {
+          "type": ["object", "null"],
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "longitude": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "required": ["latitude", "longitude"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["device_id", "channel", "ip"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "amount",
+    "transaction_date",
+    "source_account",
+    "destination_account",
+    "source"
+  ],
+  "additionalProperties": false
+}

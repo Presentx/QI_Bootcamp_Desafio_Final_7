@@ -1,0 +1,6 @@
+# Fim de linha: sempre LF dentro do repositorio.
+#
+# Windows escreve arquivo de texto com CRLF; Linux e Mac, com LF. Como
+# tudo aqui roda dentro de um container Linux, um arquivo que chega com
+# CRLF quebra de um jeito dificil de entender. Esta linha normaliza.
+* text=auto eol=lf

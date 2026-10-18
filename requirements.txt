@@ -1,0 +1,25 @@
+# Dependencias da aplicacao.
+# Cada linha fixa uma versao exata (o "==") pra que a sua maquina,
+# a do colega e a do servidor rodem exatamente o mesmo codigo.
+
+fastapi==0.141.1
+uvicorn[standard]==0.52.3
+# O FastAPI usa o pydantic por dentro, entao ele continua instalado e
+# fixado aqui. O codigo DESTE projeto nao o usa: quem valida o corpo
+# das requisicoes e o jsonschema, logo abaixo.
+pydantic==2.13.4
+# O jsonschema e quem confere o corpo da requisicao contra os arquivos
+# de src/schemas/. E a mesma versao que os servicos da QI usam.
+jsonschema==4.17.3
+SQLAlchemy==2.0.23
+# 2.9.10 e a primeira serie com pacote pronto para ARM: no Mac M1/M2/M3
+# a 2.9.5 tentaria compilar do zero e o build quebrava.
+psycopg2-binary==2.9.10
+# O requests e com que este servico chamaria OUTROS servicos por HTTP.
+# O motor antifraude nao chama ninguem, mas o RestConnector do Base
+# Service continua no projeto, e e ele quem importa.
+requests==2.32.3
+# A base de fusos horarios. O horario civil da politica (noite, dia,
+# fim de semana) e medido em America/Sao_Paulo pelo zoneinfo, e a
+# imagem slim do Python nao garante trazer essa base.
+tzdata==2025.2
